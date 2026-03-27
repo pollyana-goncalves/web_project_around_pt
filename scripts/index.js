@@ -25,28 +25,43 @@ let initialCards = [
   },
 ];
 
-initialCards.forEach(function (item) {
-  console.log(item.name);
-});
-
 const editButtonProfile = document.querySelector(".profile__edit-button");
 const editButtonModal = document.querySelector("#edit-popup");
 const closeButtonModal = editButtonModal.querySelector(".popup__close");
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
+const nameInput = document.querySelector(".popup__input_type_name");
+const jobInput = document.querySelector(".popup__input_type_description");
+let formElement = document.querySelector(".popup");
+const newCardButton = document.querySelector(".profile__add-button");
+const newCardPopup = document.querySelector("#new-card-popup");
+const newCardForm = document.querySelector("#new-card-form");
+const closeNewButton = newCardPopup.querySelector(".popup__close");
+const cardTemplate = document.querySelector("#card-template");
+console.log(cardTemplate);
+const cardList = [];
+const cardsListUl = document.querySelector(".cards__list");
 
-function openModal() {
-  editButtonModal.classList.add("popup_is-opened");
+function openModal(popup) {
+  popup.classList.add("popup_is-opened");
 }
+
+editButtonProfile.addEventListener("click", function () {
+  openModal(editButtonModal);
+});
+
+newCardButton.addEventListener("click", function () {
+  openModal(newCardPopup);
+});
 
 function closeModal() {
   editButtonModal.classList.remove("popup_is-opened");
 }
 
+closeNewButton.addEventListener("click", function () {
+  newCardPopup.classList.remove("popup_is-opened");
+});
 closeButtonModal.addEventListener("click", closeModal);
-
-const profileTitle = document.querySelector(".profile__title");
-const profileDescription = document.querySelector(".profile__description");
-const nameInput = document.querySelector(".popup__input_type_name");
-const jobInput = document.querySelector(".popup__input_type_description");
 
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
@@ -58,8 +73,6 @@ function handleOpenEditModal() {
   openModal();
 }
 editButtonProfile.addEventListener("click", handleOpenEditModal);
-
-let formElement = document.querySelector(".popup");
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -74,3 +87,57 @@ function handleProfileFormSubmit(evt) {
 }
 
 formElement.addEventListener("submit", handleProfileFormSubmit);
+
+function getCardElement(
+  name = "Lugar sem nome",
+  link = "./images/placeholder.jpg",
+) {
+  const cardElement = cardTemplate.content
+    .querySelector(".card")
+    .cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+  cardTitle.textContent = name;
+  cardImage.src.textContent = link;
+  cardImage.alt.textContent = name;
+
+  const likeButton = cardElement.querySelector(".card__like-button");
+  likeButton.addEventListener("click", function () {
+    likeButton.classList.toggle("card__like-button_active");
+  });
+
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+  deleteButton.addEventListener("click", function () {
+    cardElement.remove();
+  });
+
+  console.log("valor de card element:", cardElement);
+
+  return cardElement;
+}
+
+function renderCard(item, element) {
+  // console.log("Valor de cardList:", cardList);
+  // let cardElement = getCardElement(name, link);
+  // cardList.push(cardElement);
+  element.prepend(getCardElement(item.name, item.link));
+}
+
+initialCards.forEach((item) => {
+  renderCard(item, cardsListUl);
+});
+
+function handleCardFormSubmit(evt) {
+  evt.preventDefault();
+  let newcardname = cardTemplate.querySelector(".card__title");
+  let newcardlink = cardTemplate.querySelector(".card__image");
+  let nameInput = cardTemplate.querySelector(".popup__input_type_card-name");
+  let linkInput = cardTemplate.querySelector(".popup__input_type_card-link");
+  newcardname.textContent = nameInput.value;
+  newcardlink.src.textContent = linkInput.value;
+  newcardlink.alt.textContent = nameInput.value;
+  renderCard(nameInput.value, linkInput.value, cardList);
+  closeModal();
+}
+
+formElement.addEventListener("submit", handleCardFormSubmit);
