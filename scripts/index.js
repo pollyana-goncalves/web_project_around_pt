@@ -37,10 +37,15 @@ const newCardButton = document.querySelector(".profile__add-button");
 const newCardPopup = document.querySelector("#new-card-popup");
 const newCardForm = document.querySelector("#new-card-form");
 const closeNewButton = newCardPopup.querySelector(".popup__close");
-const cardTemplate = document.querySelector("#card-template");
-console.log(cardTemplate);
+const cardTemplate = document
+  .querySelector("#card-template")
+  .content.querySelector(".card");
+const cardsSection = document.createElement("section");
+cardsSection.className = "cards page__section";
+cardsSection.innerHTML = '<ul class="cards__list"></ul>';
+document.querySelector(".profile").after(cardsSection);
 const cardList = [];
-const cardsListUl = document.querySelector(".cards__list");
+const cardsWrap = document.querySelector(".cards__list");
 
 function openModal(popup) {
   popup.classList.add("popup_is-opened");
@@ -92,14 +97,13 @@ function getCardElement(
   name = "Lugar sem nome",
   link = "./images/placeholder.jpg",
 ) {
-  const cardElement = cardTemplate.content
-    .querySelector(".card")
-    .cloneNode(true);
+  const cardElement = cardTemplate.cloneNode(true);
+  console.log("Valor de card element:", cardElement);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   cardTitle.textContent = name;
-  cardImage.src.textContent = link;
-  cardImage.alt.textContent = name;
+  cardImage.src = link;
+  cardImage.alt = name;
 
   const likeButton = cardElement.querySelector(".card__like-button");
   likeButton.addEventListener("click", function () {
@@ -117,14 +121,14 @@ function getCardElement(
 }
 
 function renderCard(item, element) {
-  // console.log("Valor de cardList:", cardList);
+  console.log("Valor de cardList:", element);
   // let cardElement = getCardElement(name, link);
   // cardList.push(cardElement);
   element.prepend(getCardElement(item.name, item.link));
 }
 
 initialCards.forEach((item) => {
-  renderCard(item, cardsListUl);
+  renderCard(item, cardsWrap);
 });
 
 function handleCardFormSubmit(evt) {
