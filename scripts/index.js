@@ -93,10 +93,10 @@ editButtonProfile.addEventListener("click", handleOpenEditModal);
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  let profileTitle = document.querySelector(".profile__title");
-  let profileDescription = document.querySelector(".profile__description");
-  let nameInput = document.querySelector(".popup__input_type_name");
-  let jobInput = document.querySelector(".popup__input_type_description");
+  const profileTitle = document.querySelector(".profile__title");
+  const profileDescription = document.querySelector(".profile__description");
+  const nameInput = document.querySelector(".popup__input_type_name");
+  const jobInput = document.querySelector(".popup__input_type_description");
 
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
@@ -140,9 +140,6 @@ function getCardElement(
 }
 
 function renderCard(item, element) {
-  console.log("Valor de cardList:", element);
-  // let cardElement = getCardElement(name, link);
-  // cardList.push(cardElement);
   element.prepend(getCardElement(item.name, item.link));
 }
 
